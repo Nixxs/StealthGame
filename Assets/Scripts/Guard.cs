@@ -6,17 +6,19 @@ public class Guard : MonoBehaviour
 {
     public Transform pathholder;
     public float speed;
+    public float turnspeed;
     IEnumerator currentBehavior;
     int waypointIndex;
     
     void Start()
     {
         speed = 5f;
+        turnspeed = 35f;
         waypointIndex = 0;
 
         // snap the guard to his starting position
         transform.position = pathholder.GetChild(waypointIndex).position;
-        currentBehavior = FollowWaypoints(2f);
+        currentBehavior = FollowWaypoints();
         StartCoroutine(currentBehavior);
     } 
 
@@ -25,7 +27,7 @@ public class Guard : MonoBehaviour
         // example of conditionals that change behaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
-            ChangeBehavior(FollowWaypoints(2f));
+            ChangeBehavior(FollowWaypoints());
         }
         if (Input.GetKeyDown(KeyCode.B))
         {
@@ -39,44 +41,45 @@ public class Guard : MonoBehaviour
 
         print("other behaviour");
         yield return null;
-
+        
     }
 
-    IEnumerator FollowWaypoints(float waitTime)
+    IEnumerator FollowWaypoints()
     {
-        float _waitTime = waitTime;
-        float timer = _waitTime;
+
         Transform currentWaypoint = pathholder.GetChild(waypointIndex);
 
         while (true)
         {
+            // get the target vector direction to the next waypoint
+            Vector3 targetDirection = (currentWaypoint.position - transform.position).normalized;
+            // calculate the target rotation that we should end up in before moving
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+
+            // while the current angle is more than 0.01f from the target rotation rotate toward the target
+            while (Quaternion.Angle(transform.rotation, targetRotation) >= 0.05f)
+            {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnspeed * Time.deltaTime);
+                yield return null;
+            }
+
             // if we've reached the target waypoint then stop if now keep moving toward it
             if (Vector3.Distance(transform.position, currentWaypoint.position) < 0.2f)
             {
-                // if the timer is finished then set new waypoint and reset timer
-                if (timer <= 0)
+                // reached the waypoint so update to the next waypoint
+                waypointIndex += 1;
+                if (waypointIndex >= pathholder.childCount)
                 {
-                    // change the current waypoint to the next one but if the index is larger than the possible
-                    // number of waypoints then set the waypoint back to the first waypoint again
-                    waypointIndex += 1;
-                    if (waypointIndex >= pathholder.childCount)
-                    {
-                        waypointIndex = 0;
-                    }
-                    currentWaypoint = pathholder.GetChild(waypointIndex);
-                    timer = _waitTime;
-                    yield return null;
+                    waypointIndex = 0;
                 }
-                else // keep the timer ticking along while the guard has stopped moving
-                {
-                    timer -= Time.fixedDeltaTime;
-                    yield return null;
-                }
+                // update current waypoint to the next waypoint
+                currentWaypoint = pathholder.GetChild(waypointIndex);
             }
             else // move toward the current waypoint
             {
                 Vector3 direction = (currentWaypoint.position - transform.position).normalized;
-                transform.position += direction * speed * Time.fixedDeltaTime;
+                Vector3 movement = direction * speed * Time.deltaTime;
+                transform.position += new Vector3(movement.x, 0, movement.z);
                 yield return null;
             }
         }
