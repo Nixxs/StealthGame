@@ -7,13 +7,15 @@ public class Guard : MonoBehaviour
     public Transform pathholder;
     public float speed;
     public float turnspeed;
+    public float waitTime;
     IEnumerator currentBehavior;
     int waypointIndex;
     
     void Start()
     {
-        speed = 5f;
-        turnspeed = 35f;
+        speed = 7f;
+        turnspeed = 50f;
+        waitTime = 0.5f;
         waypointIndex = 0;
 
         // snap the guard to his starting position
@@ -51,6 +53,7 @@ public class Guard : MonoBehaviour
 
         while (true)
         {
+            
             // get the target vector direction to the next waypoint
             Vector3 targetDirection = (currentWaypoint.position - transform.position).normalized;
             // calculate the target rotation that we should end up in before moving
@@ -66,6 +69,7 @@ public class Guard : MonoBehaviour
             // if we've reached the target waypoint then stop if now keep moving toward it
             if (Vector3.Distance(transform.position, currentWaypoint.position) < 0.2f)
             {
+                yield return new WaitForSeconds(waitTime);
                 // reached the waypoint so update to the next waypoint
                 waypointIndex += 1;
                 if (waypointIndex >= pathholder.childCount)
