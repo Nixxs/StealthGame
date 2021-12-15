@@ -60,7 +60,7 @@ public class Guard : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
 
             // while the current angle is more than 0.01f from the target rotation rotate toward the target
-            while (Quaternion.Angle(transform.rotation, targetRotation) >= 0.05f)
+            while (Quaternion.Angle(transform.rotation, targetRotation) >= 0.1f)
             {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnspeed * Time.deltaTime);
                 yield return null;
