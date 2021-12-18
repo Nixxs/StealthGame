@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public int speed;
-    public int turnspeed;
-    public float smoothMovementTime;
+    int speed;
+    int turnspeed;
+    float smoothMovementTime;
 
     float smoothMovementVelocity;
     float smoothMagnitude;
@@ -19,12 +19,14 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        speed = 7;
-        turnspeed = 8;
-        smoothMovementTime = 0.1f;
+        Player player = GetComponent<Player>();
+
+        speed = player.speed;
+        turnspeed = player.turnspeed;
+        smoothMovementTime = player.smoothMovementTime;
         velocity = Vector3.zero;
 
-        playerRigidBody = GetComponent<Rigidbody>();
+        playerRigidBody = player.rigidBody;
     }
 
     // Update is called once per frame
