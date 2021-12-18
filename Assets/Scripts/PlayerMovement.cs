@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
         smoothMovementTime = 0.1f;
         velocity = Vector3.zero;
 
-        playerRigidBody = FindObjectOfType<Rigidbody>();
+        playerRigidBody = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
