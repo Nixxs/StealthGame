@@ -252,6 +252,8 @@ MonoBehaviour:
   speed: 0
   turnspeed: 0
   waitTime: 0
+  spotLight: {fileID: 53815336}
+  viewDistance: 0
 --- !u!136 &389682439
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -374,7 +376,7 @@ GameObject:
   - component: {fileID: 544517566}
   m_Layer: 0
   m_Name: WAll
-  m_TagString: Untagged
+  m_TagString: wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -705,9 +707,10 @@ GameObject:
   - component: {fileID: 1281758006}
   - component: {fileID: 1281758005}
   - component: {fileID: 1281758004}
+  - component: {fileID: 1281758010}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -724,9 +727,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d488b32afbbf5344ba6d73e5a4de3bf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  turnspeed: 0
-  smoothMovementTime: 0
 --- !u!54 &1281758005
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -819,6 +819,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1281758010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281758003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37336306673cdd149ae3216db406cebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  turnspeed: 0
+  smoothMovementTime: 0
 --- !u!1 &1704458242
 GameObject:
   m_ObjectHideFlags: 0

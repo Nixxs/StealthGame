@@ -10,9 +10,16 @@ public class Guard : MonoBehaviour
     public float waitTime;
     IEnumerator currentBehavior;
     int waypointIndex;
+
+    public Light spotLight;
+    public float viewDistance;
+    float viewAngle;
     
     void Start()
     {
+        viewAngle = spotLight.spotAngle;
+        viewDistance = spotLight.range - 2f;
+
         speed = 7f;
         turnspeed = 50f;
         waitTime = 0.5f;
@@ -26,15 +33,7 @@ public class Guard : MonoBehaviour
 
     void Update()
     {
-        // example of conditionals that change behaviour
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            ChangeBehavior(FollowWaypoints());
-        }
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            ChangeBehavior(OtherBehaviour());
-        }
+        Debug.Log(CanSeePlayer());
     }
 
     // a test behaviour
@@ -48,12 +47,10 @@ public class Guard : MonoBehaviour
 
     IEnumerator FollowWaypoints()
     {
-
         Transform currentWaypoint = pathholder.GetChild(waypointIndex);
 
         while (true)
         {
-            
             // get the target vector direction to the next waypoint
             Vector3 targetDirection = (currentWaypoint.position - transform.position).normalized;
             // calculate the target rotation that we should end up in before moving
@@ -113,5 +110,58 @@ public class Guard : MonoBehaviour
         }
 
         Gizmos.DrawLine(previousPosition, startPosition);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, transform.forward * viewDistance);
+    }
+    bool CanSeePlayer()
+    {
+        Player player = FindObjectOfType<Player>();
+        bool withinRangeOfPlayer = false;
+        bool viewAngleOverlaps = false;
+        bool noObstructions = false;
+
+        // check for range
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distanceToPlayer <= viewDistance)
+        {
+            withinRangeOfPlayer = true;
+        }
+
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+        if (angleToPlayer <= viewAngle / 2)
+        {
+            viewAngleOverlaps = true;
+        }
+
+        // if we are within range of the player and the viewangle overlaps then
+        // we will check for obstructions
+        if (withinRangeOfPlayer && viewAngleOverlaps)
+        {
+            // define a ray from position to the position of the player
+            Ray ray = new Ray(transform.position, directionToPlayer);
+            RaycastHit hitInfo;
+
+            // cast the ray out limit distance to the view distance
+            if (Physics.Raycast(ray, out hitInfo, viewDistance))
+            {
+                // the ray has hit the player
+                if (hitInfo.transform.gameObject.tag == "player")
+                {
+                    Debug.DrawLine(ray.origin, hitInfo.point, Color.green);
+                    noObstructions = true;
+                }
+            }
+        }
+
+        if (withinRangeOfPlayer && viewAngleOverlaps && noObstructions)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
