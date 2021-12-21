@@ -15,6 +15,8 @@ public class Guard : MonoBehaviour
     public float viewDistance;
     float viewAngle;
 
+    float detectionCountDown;
+    float detectionTimer;
     Color neutralSpotlightColour;
     
     void Start()
@@ -27,6 +29,8 @@ public class Guard : MonoBehaviour
         waitTime = 0.5f;
         waypointIndex = 0;
 
+        detectionTimer = 1.0f;
+        detectionCountDown = detectionTimer;
         neutralSpotlightColour = spotLight.color;
 
         // snap the guard to his starting position
@@ -39,11 +43,19 @@ public class Guard : MonoBehaviour
     {
         if (CanSeePlayer())
         {
-            spotLight.color = Color.red;
+            if (detectionCountDown <= 0f)
+            {
+                spotLight.color = Color.red;
+            }
+            else
+            {
+                detectionCountDown -= Time.deltaTime;
+            }
         }
         else
         {
             spotLight.color = neutralSpotlightColour;
+            detectionCountDown = detectionTimer;
         }
     }
 
