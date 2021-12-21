@@ -14,6 +14,8 @@ public class Guard : MonoBehaviour
     public Light spotLight;
     public float viewDistance;
     float viewAngle;
+
+    Color neutralSpotlightColour;
     
     void Start()
     {
@@ -25,6 +27,8 @@ public class Guard : MonoBehaviour
         waitTime = 0.5f;
         waypointIndex = 0;
 
+        neutralSpotlightColour = spotLight.color;
+
         // snap the guard to his starting position
         transform.position = pathholder.GetChild(waypointIndex).position;
         currentBehavior = FollowWaypoints();
@@ -33,7 +37,14 @@ public class Guard : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(CanSeePlayer());
+        if (CanSeePlayer())
+        {
+            spotLight.color = Color.red;
+        }
+        else
+        {
+            spotLight.color = neutralSpotlightColour;
+        }
     }
 
     // a test behaviour
