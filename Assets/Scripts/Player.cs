@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public bool disabled;
     public int speed;
     public int turnspeed;
     public float smoothMovementTime;
@@ -21,6 +22,9 @@ public class Player : MonoBehaviour
         speed = 7;
         turnspeed = 8;
         smoothMovementTime = 0.1f;
+        disabled = false;
+
+        Guard.GuardHasSpottedPlayer += Disable;
     }
 
     private void OnTriggerEnter(Collider triggerCollider)
@@ -29,5 +33,15 @@ public class Player : MonoBehaviour
         {
             Debug.Log("Level Complete!");
         }
+    }
+
+    void Disable()
+    {
+        disabled = true;
+    }
+
+    void OnDestroy()
+    {
+        Guard.GuardHasSpottedPlayer -= Disable;   
     }
 }

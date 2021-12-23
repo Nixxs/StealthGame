@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    Player player;
+
     int speed;
     int turnspeed;
     float smoothMovementTime;
@@ -19,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Player player = GetComponent<Player>();
+        player = GetComponent<Player>();
 
         speed = player.speed;
         turnspeed = player.turnspeed;
@@ -32,7 +34,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+        direction = Vector3.zero;
+        if (player.disabled == false)
+        {
+            direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+        }
         float inputMagnitude = direction.magnitude;
         smoothMagnitude = Mathf.SmoothDamp(smoothMagnitude, inputMagnitude, ref smoothMovementVelocity, smoothMovementTime);
         velocity = direction * speed * smoothMagnitude;

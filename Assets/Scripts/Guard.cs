@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Guard : MonoBehaviour
 {
+    public static event System.Action GuardHasSpottedPlayer;
+
     public Transform pathholder;
     public float speed;
     public float turnspeed;
@@ -29,7 +31,7 @@ public class Guard : MonoBehaviour
         waitTime = 0.5f;
         waypointIndex = 0;
 
-        detectionTimer = 1.0f;
+        detectionTimer = 0.5f;
         detectionCountDown = detectionTimer;
         neutralSpotlightColour = spotLight.color;
 
@@ -46,7 +48,10 @@ public class Guard : MonoBehaviour
             if (detectionCountDown <= 0f)
             {
                 spotLight.color = Color.red;
-                Debug.Log("GAME OVER");
+                if (GuardHasSpottedPlayer != null)
+                {
+                    GuardHasSpottedPlayer();
+                }
             }
             else
             {
