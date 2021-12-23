@@ -25,14 +25,7 @@ public class Player : MonoBehaviour
         disabled = false;
 
         Guard.GuardHasSpottedPlayer += Disable;
-    }
-
-    private void OnTriggerEnter(Collider triggerCollider)
-    {
-        if (triggerCollider.gameObject.name == "FinishZone")
-        {
-            Debug.Log("Level Complete!");
-        }
+        FinishZone.PlayerWins += Disable;
     }
 
     void Disable()
@@ -42,6 +35,7 @@ public class Player : MonoBehaviour
 
     void OnDestroy()
     {
-        Guard.GuardHasSpottedPlayer -= Disable;   
+        Guard.GuardHasSpottedPlayer -= Disable;
+        FinishZone.PlayerWins -= Disable;
     }
 }
