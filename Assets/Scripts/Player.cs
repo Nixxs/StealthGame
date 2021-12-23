@@ -22,4 +22,12 @@ public class Player : MonoBehaviour
         turnspeed = 8;
         smoothMovementTime = 0.1f;
     }
+
+    private void OnTriggerEnter(Collider triggerCollider)
+    {
+        if (triggerCollider.gameObject.name == "FinishZone")
+        {
+            Debug.Log("Level Complete!");
+        }
+    }
 }

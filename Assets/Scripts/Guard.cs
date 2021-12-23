@@ -46,6 +46,7 @@ public class Guard : MonoBehaviour
             if (detectionCountDown <= 0f)
             {
                 spotLight.color = Color.red;
+                Debug.Log("GAME OVER");
             }
             else
             {
